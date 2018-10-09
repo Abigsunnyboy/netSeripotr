@@ -14,8 +14,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     QString name = QString::fromLocal8Bit("网络通讯助手");
-    QString data = "9.25";
-    QString version = "1.0";
+    QString data = "10.9";
+    QString version = "v1.2";
     QString aurthor = "zhaoliang";
     setWindowTitle(name+" "+data +" "+ version+" "+aurthor);
     setFixedHeight(660);
