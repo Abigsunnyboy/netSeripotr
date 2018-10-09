@@ -12,3 +12,5 @@ Unit tcp server and tcpclient and UDP to a dialog
 不支持添加附加位，应答包。
 debug版本有图标
 release版本没有添加图标
+
+编译请使用release版本
