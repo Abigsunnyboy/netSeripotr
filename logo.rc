@@ -1,0 +1,5 @@
+﻿<!DOCTYPE RCC>
+<RCC version="1.0"/>
+
+IDI_ICON1     ICON    DISCARDABLE     "logo.ico"
+IDI_ICON1               ICON    DISCARDABLE    "logo.ico"
