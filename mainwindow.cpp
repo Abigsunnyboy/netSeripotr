@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QString name = QString::fromLocal8Bit("网络通讯助手");
     QString data = "10.9";
-    QString version = "v1.2";
+    QString version = "v2.1";
     QString aurthor = "zhaoliang";
     setWindowTitle(name+" "+data +" "+ version+" "+aurthor);
     setFixedHeight(660);
@@ -97,7 +97,7 @@ void MainWindow::selectModule(int index){
 }
 
 void MainWindow::udpServerset(){
-   // ui->statusBar->clearMessage();
+    // ui->statusBar->clearMessage();
     udpSocket= new QUdpSocket(this);
     connect (udpSocket,SIGNAL (readyRead()),this,SLOT(onUDPsocketReadyRead()));
 
@@ -171,7 +171,7 @@ void MainWindow::on_pushButton_Senddata_clicked()
         return ;
     }
 
- //读取发送文本
+    //读取发送文本
     int module =  ui->tabWidget->currentIndex();
     QString message = ui->lineEdit_Sendedit->text();
     dataTime = getCurrentTime();
@@ -194,26 +194,26 @@ void MainWindow::on_pushButton_Senddata_clicked()
     {
         qDebug()<<"timer";
     }
-//UDP 地址
+    //UDP 地址
     QString targetIP = ui->lineEdit_UDPtargetAdress->text();
     QHostAddress targetADDr (targetIP);
     quint16 targetPort = ui->lineEdit_UDPtargetPort->text().toInt();
 
     switch (module) {
     case 0:
-       // qDebug()<<"udpServer send data";
+        // qDebug()<<"udpServer send data";
 
         if (ui->radioButton_singalSend->isChecked())
         {
-        udpSocket->writeDatagram(str,targetADDr,targetPort);
+            udpSocket->writeDatagram(str,targetADDr,targetPort);
 
-        ui->textEdit_ReceiveData->append(dataTime +QString::fromLocal8Bit("udp单播发送：" )+message);
+            ui->textEdit_ReceiveData->append(dataTime +QString::fromLocal8Bit("udp单播发送：" )+message);
         }
         else if (ui->radioButton_multiSend->isChecked()){//广播
-        udpSocket->writeDatagram(str,QHostAddress::Broadcast,targetPort);//广播地址一般255.255.255.255，即QHostAddress::Broadcast
+            udpSocket->writeDatagram(str,QHostAddress::Broadcast,targetPort);//广播地址一般255.255.255.255，即QHostAddress::Broadcast
 
-        ui->textEdit_ReceiveData->append(dataTime +QString::fromLocal8Bit("udp广播发送：" )+message);
-          }
+            ui->textEdit_ReceiveData->append(dataTime +QString::fromLocal8Bit("udp广播发送：" )+message);
+        }
 
         break;
     case 1:
@@ -302,36 +302,36 @@ void MainWindow :: on_pushButton_TCPServerOpen_clicked(){//打开服务器
     QString IP = ui->comboBox_TCPServerLocalAdress->currentText();
     quint16 port = ui->lineEdit_TCPServerRemotePort->text().toInt();//取得服务器地址和端口号
 
- if (isIP(IP)){
-    if (ui->pushButton_TCPServerOpen->text()==QString::fromLocal8Bit("监听"))
-    {
+    if (isIP(IP)){
+        if (ui->pushButton_TCPServerOpen->text()==QString::fromLocal8Bit("监听"))
+        {
 
-        QHostAddress addr(IP);
+            QHostAddress addr(IP);
 
-        tcpServer->listen(addr,port);//监听
+            tcpServer->listen(addr,port);//监听
 
-        ui->pushButton_TCPServerOpen->setText(QString::fromLocal8Bit("关闭服务器"));
-        lableTCPstatus->setText(QString::fromLocal8Bit("服务器状态：正在监听..."));
+            ui->pushButton_TCPServerOpen->setText(QString::fromLocal8Bit("关闭服务器"));
+            lableTCPstatus->setText(QString::fromLocal8Bit("服务器状态：正在监听..."));
 
-        lableTCPIP->setText(QString::fromLocal8Bit("服务器地址：")+tcpServer->serverAddress().toString());
-        lableTCPPort->setText(QString::fromLocal8Bit("服务器端口：")+QString::number(tcpServer->serverPort()));
+            lableTCPIP->setText(QString::fromLocal8Bit("服务器地址：")+tcpServer->serverAddress().toString());
+            lableTCPPort->setText(QString::fromLocal8Bit("服务器端口：")+QString::number(tcpServer->serverPort()));
 
+        }
+        else{
+            ui->pushButton_TCPServerOpen->setText(QString::fromLocal8Bit("监听"));
+
+            tcpServer->close();
+
+            lableTCPstatus->setText(QString::fromLocal8Bit("服务器状态：服务器关闭"));
+            lableTCPIP->setText(QString::fromLocal8Bit("服务器地址：")+tcpServer->serverAddress().toString());
+            lableTCPPort->setText(QString::fromLocal8Bit("服务器端口：")+QString::number(tcpServer->serverPort()));
+        }
     }
-    else{
-        ui->pushButton_TCPServerOpen->setText(QString::fromLocal8Bit("监听"));
-
-        tcpServer->close();
-
-        lableTCPstatus->setText(QString::fromLocal8Bit("服务器状态：服务器关闭"));
-        lableTCPIP->setText(QString::fromLocal8Bit("服务器地址：")+tcpServer->serverAddress().toString());
-        lableTCPPort->setText(QString::fromLocal8Bit("服务器端口：")+QString::number(tcpServer->serverPort()));
-    }
- }
     else{
         QMessageBox::information(NULL,
-                                                  QString::fromLocal8Bit("注意"),
-                                                  QString::fromLocal8Bit("Ip不正确"),
-                                                  QMessageBox::Yes);
+                                 QString::fromLocal8Bit("注意"),
+                                 QString::fromLocal8Bit("Ip不正确"),
+                                 QMessageBox::Yes);
     }
 
 }
@@ -343,7 +343,7 @@ void MainWindow::showConnection()
 
     /* change connect number while connection is connecting */
     ui->labCount->setText(QString::fromLocal8Bit("共")+" "+QString::number(count)+" "+QString::fromLocal8Bit("个连接"));
-   /* add socket object that join in */
+    /* add socket object that join in */
     ui->listWidget_clientInfo->addItem(QString::number(tcpServer->socketList.last()));
 
 
@@ -360,11 +360,11 @@ void MainWindow::showDisconnection(int socketDescriptor)
 
     ui->listWidget_clientInfo->clear();
     for (int i = 0; i < tcpServer->socketList.size(); i++) {
-           ui->listWidget_clientInfo->addItem(QString("%1").arg(tcpServer->socketList.at(i)));
+        ui->listWidget_clientInfo->addItem(QString("%1").arg(tcpServer->socketList.at(i)));
     }
 
     //change connect number while connection is disconnecting
-  ui->labCount->setText(QString::fromLocal8Bit("共")+" "+QString::number(count)+" "+QString::fromLocal8Bit("个连接"));
+    ui->labCount->setText(QString::fromLocal8Bit("共")+" "+QString::number(count)+" "+QString::fromLocal8Bit("个连接"));
 }
 
 
@@ -384,7 +384,7 @@ void MainWindow::revData(QString peerAddr, QByteArray data)
         peerAddr.insert(peerAddr.size(), ": ");
         msg.prepend(peerAddr);
         ui->textEdit_ReceiveData->setTextColor(QColor ("blue"));
-        ui->textEdit_ReceiveData->append(dataTime + msg);
+        ui->textEdit_ReceiveData->append(dataTime +" "+ msg);
     }
 
 }
@@ -430,15 +430,15 @@ void MainWindow::displayError(QAbstractSocket::SocketError){
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-          qDebug()<<event;
+    qDebug()<<event;
 
-     emit mainwindowClose();
+    emit mainwindowClose();
 }
 
 //客户端代码
 void MainWindow::onConnectedtoServer(){
 
-   // qDebug()<<"";
+    // qDebug()<<"";
 
     lableClient_remoteIP->setText(QString::fromLocal8Bit("远程服务器地址和端口：")+tcpClient->peerAddress().toString()
                                   +"::"+QString::number(tcpClient->peerPort()));
@@ -448,30 +448,30 @@ void MainWindow::onConnectedtoServer(){
 
 void MainWindow::onDisconnectedtoServer(){
     // lableSocketStatus_client->setText(QString::fromLocal8Bit("连接状态：未连接"));
-     lableClient_remoteIP->setText(QString::fromLocal8Bit("远程服务器地址和端口："));
-     lableSocketStatus_client->setText(QString::fromLocal8Bit("连接状态：未连接"));
+    lableClient_remoteIP->setText(QString::fromLocal8Bit("远程服务器地址和端口："));
+    lableSocketStatus_client->setText(QString::fromLocal8Bit("连接状态：未连接"));
 }
 void MainWindow::ClientReadyread(){
     if (!ui->checkBox_TerminalReceive->checkState()){
-       dataTime = getCurrentTime();
-    QByteArray buff = tcpClient->readAll();
-    qDebug()<< buff;
-    QString message;
-    ui->textEdit_ReceiveData->setTextColor(QColor ("green"));
+        dataTime = getCurrentTime();
+        QByteArray buff = tcpClient->readAll();
+        qDebug()<< buff;
+        QString message;
+        ui->textEdit_ReceiveData->setTextColor(QColor ("green"));
 
-    if (ui->checkBox_ReceiveHex->checkState())
-    {
-      message = charToHex(buff);
-      message = (QString::fromLocal8Bit("接收自服务器：")
-                 +tcpClient->peerAddress().toString()+"::"+QString::number(tcpClient->peerPort())+":  "+message );
-    }
-    else{
-         message =(QString::fromLocal8Bit("接收自服务器：")
-                          +tcpClient->peerAddress().toString()+"::"+QString::number(tcpClient->peerPort())+":  "+buff ).toUtf8();
-        //  ui->textEdit_ReceiveData->append("<font color=\"#0000FF\"> \message\ </font>");
-    }
+        if (ui->checkBox_ReceiveHex->checkState())
+        {
+            message = charToHex(buff);
+            message = (QString::fromLocal8Bit("接收自服务器：")
+                       +tcpClient->peerAddress().toString()+"::"+QString::number(tcpClient->peerPort())+":  "+message );
+        }
+        else{
+            message =(QString::fromLocal8Bit("接收自服务器：")
+                      +tcpClient->peerAddress().toString()+"::"+QString::number(tcpClient->peerPort())+":  "+buff ).toUtf8();
+            //  ui->textEdit_ReceiveData->append("<font color=\"#0000FF\"> \message\ </font>");
+        }
 
-     ui->textEdit_ReceiveData->append(dataTime +" "+message);
+        ui->textEdit_ReceiveData->append(dataTime +" "+message);
     }
 }
 
@@ -480,26 +480,26 @@ void MainWindow::on_pushButton_TCPClientLink_clicked()//连接或者断开客户
 {
     QString addr = ui->comboBox_TCPClientRemoteAdress->currentText();
     quint16 port = ui->lineEdit_TCPServerRemotePort->text().toUInt();
-if (isIP(addr)){
-    if(tcpClient->state()==QAbstractSocket::UnconnectedState &&ui->pushButton_TCPClientLink->text() == QString::fromLocal8Bit("连接") ){
-       tcpClient->connectToHost(addr,port);
-       ui->pushButton_TCPClientLink->setText(QString::fromLocal8Bit("断开"));
-        // qDebug()<<tcpClient->state();
-    }
+    if (isIP(addr)){
+        if(tcpClient->state()==QAbstractSocket::UnconnectedState &&ui->pushButton_TCPClientLink->text() == QString::fromLocal8Bit("连接") ){
+            tcpClient->connectToHost(addr,port);
+            ui->pushButton_TCPClientLink->setText(QString::fromLocal8Bit("断开"));
+            // qDebug()<<tcpClient->state();
+        }
 
-    else
-    {
-        ui->pushButton_TCPClientLink->setText(QString::fromLocal8Bit("连接"));
-        tcpClient->disconnectFromHost();
-        //  qDebug()<<tcpClient->state();
+        else
+        {
+            ui->pushButton_TCPClientLink->setText(QString::fromLocal8Bit("连接"));
+            tcpClient->disconnectFromHost();
+            //  qDebug()<<tcpClient->state();
+        }
     }
-}
-else{
-    QMessageBox::information(NULL,
-                                              QString::fromLocal8Bit("注意"),
-                                              QString::fromLocal8Bit("Ip不正确"),
-                                              QMessageBox::Yes);
-}
+    else{
+        QMessageBox::information(NULL,
+                                 QString::fromLocal8Bit("注意"),
+                                 QString::fromLocal8Bit("Ip不正确"),
+                                 QMessageBox::Yes);
+    }
 }
 
 //UDP 代码
@@ -509,60 +509,60 @@ void MainWindow::on_pushButton_UDPopen_clicked()
     quint16 port = ui->lineEdit_UDPPort->text().toInt();
     QString addr = ui->comboBox_UDPAdress->currentText();
 
-if (isIP(addr)){
-    if (ui->pushButton_UDPopen->text() == QString::fromLocal8Bit("绑定")&&udpSocket->bind(port))//绑定成功
-    {
-       // udpSocket->bind(QHostAddress::LocalHost, port);
-        //   qDebug()<< udpSocket->state();
+    if (isIP(addr)){
+        if (ui->pushButton_UDPopen->text() == QString::fromLocal8Bit("绑定")&&udpSocket->bind(port))//绑定成功
+        {
+            // udpSocket->bind(QHostAddress::LocalHost, port);
+            //   qDebug()<< udpSocket->state();
 
-        ui->pushButton_UDPopen->setText(QString::fromLocal8Bit("解除绑定"));
+            ui->pushButton_UDPopen->setText(QString::fromLocal8Bit("解除绑定"));
 
-       // lableUDPsocketStatus->setText(QString::fromLocal8Bit("绑定成功"));
+            // lableUDPsocketStatus->setText(QString::fromLocal8Bit("绑定成功"));
+        }
+        else {
+            ui->pushButton_UDPopen->setText(QString::fromLocal8Bit("绑定"));
+            udpSocket->abort();//断开连接
+            //  qDebug()<< udpSocket->state();
+            // lableUDPsocketStatus->setText(QString::fromLocal8Bit("未绑定"));
+        }
     }
-    else {
-        ui->pushButton_UDPopen->setText(QString::fromLocal8Bit("绑定"));
-        udpSocket->abort();//断开连接
-      //  qDebug()<< udpSocket->state();
-       // lableUDPsocketStatus->setText(QString::fromLocal8Bit("未绑定"));
+    else{
+        QMessageBox::information(NULL,
+                                 QString::fromLocal8Bit("注意"),
+                                 QString::fromLocal8Bit("Ip不正确"),
+                                 QMessageBox::Yes);
     }
-}
-else{
-    QMessageBox::information(NULL,
-                                              QString::fromLocal8Bit("注意"),
-                                              QString::fromLocal8Bit("Ip不正确"),
-                                              QMessageBox::Yes);
-}
 }
 
 void MainWindow::onUDPsocketReadyRead(){
     if (!ui->checkBox_TerminalReceive->checkState()){
         dataTime = getCurrentTime();
 
-    while (udpSocket->hasPendingDatagrams()) {
-        QByteArray datagram;
-        datagram.resize(udpSocket->pendingDatagramSize());
+        while (udpSocket->hasPendingDatagrams()) {
+            QByteArray datagram;
+            datagram.resize(udpSocket->pendingDatagramSize());
 
-        QHostAddress peerADDr;
-        quint16 peerPort;
-        udpSocket->readDatagram(datagram.data(),datagram.size(),&peerADDr,&peerPort);//读取数据并获得数据来源的地址和端口
-        QString tempPeer = peerADDr.toString();
-        tempPeer =tempPeer.remove(0,7);
+            QHostAddress peerADDr;
+            quint16 peerPort;
+            udpSocket->readDatagram(datagram.data(),datagram.size(),&peerADDr,&peerPort);//读取数据并获得数据来源的地址和端口
+            QString tempPeer = peerADDr.toString();
+            tempPeer =tempPeer.remove(0,7);
 
-        QString str = datagram.data();
-        qDebug()<<str;
-        if (ui->checkBox_ReceiveHex->checkState())
-        {
-          str = charToHex(datagram);
+            QString str = datagram.data();
+            qDebug()<<str;
+            if (ui->checkBox_ReceiveHex->checkState())
+            {
+                str = charToHex(datagram);
 
+            }
+            else{
+                str = str.toUtf8();
+            }
+            QString peer = (QString::fromLocal8Bit("由")+ tempPeer+"::"+QString::number(peerPort));
+
+            ui->textEdit_ReceiveData->append(dataTime +" "+peer+" "+str);
         }
-        else{
-          str = str.toUtf8();
-        }
-        QString peer = (QString::fromLocal8Bit("由")+ tempPeer+"::"+QString::number(peerPort));
-
-        ui->textEdit_ReceiveData->append(dataTime +" "+peer+" "+str);
     }
-   }
 }
 
 void MainWindow::on_pushButton_Cllearinput_clicked()
@@ -571,15 +571,15 @@ void MainWindow::on_pushButton_Cllearinput_clicked()
 }
 
 QString MainWindow::charToHex(const QByteArray buff){
-          QString strDis;
-          QString str = buff.toHex();//以十六进制显示
-           str = str.toUpper ();//转换为大写
-           for(int i = 0;i<str.length ();i+=2)//填加空格
-           {
-               QString st = str.mid (i,2);
-               strDis += st;
-               strDis += " ";
-           }
+    QString strDis;
+    QString str = buff.toHex();//以十六进制显示
+    str = str.toUpper ();//转换为大写
+    for(int i = 0;i<str.length ();i+=2)//填加空格
+    {
+        QString st = str.mid (i,2);
+        strDis += st;
+        strDis += " ";
+    }
     return strDis;
 }
 
@@ -587,12 +587,12 @@ void MainWindow::on_checkBox_SendHex_clicked(bool checked)
 {
     if(checked)
     {
-       QRegExp abcd("[a-fA-F0-9]+$");
-       ui->lineEdit_Sendedit->setPlaceholderText("input a-zA-Z0-9");
+        QRegExp abcd("[a-fA-F0-9]+$");
+        ui->lineEdit_Sendedit->setPlaceholderText("input a-zA-Z0-9");
         ui->lineEdit_Sendedit->setValidator(new QRegExpValidator(abcd));
     }
     else{
-         ui->lineEdit_Sendedit->setPlaceholderText("input what you want");
+        ui->lineEdit_Sendedit->setPlaceholderText("input what you want");
     }
 }
 
@@ -600,19 +600,19 @@ void MainWindow::on_pushButton_SaveData_clicked()
 {
     QString filePath = "./data.txt";
 
-     QFile file(filePath);
-     //   if (file.exists()) {
-     if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-         QTextStream stream(&file);
-         QString data = ui->textEdit_ReceiveData->document()->toPlainText();
-         stream << data;
+    QFile file(filePath);
+    //   if (file.exists()) {
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QTextStream stream(&file);
+        QString data = ui->textEdit_ReceiveData->document()->toPlainText();
+        stream << data;
 
-     }
-     else {
-         QString title = title.fromLocal8Bit("文件打开错误");
-         QString information = information.fromLocal8Bit("请在当前目录下创建data.txt");
-         QMessageBox::warning(this, title, information,QMessageBox::Ok);
-     }
+    }
+    else {
+        QString title = title.fromLocal8Bit("文件打开错误");
+        QString information = information.fromLocal8Bit("请在当前目录下创建data.txt");
+        QMessageBox::warning(this, title, information,QMessageBox::Ok);
+    }
 }
 
 void MainWindow::on_checkBox_TimerSend_clicked(bool checked)
@@ -684,7 +684,7 @@ void MainWindow::on_pushButton_Sendfile_clicked()
         line = line + "\n";
         //   qDebug()<<line;
         ui->lineEdit_Sendedit->setText(line);
-        emit ( sendfile_line());
+        emit (sendfile_line());
         ui->lineEdit_Sendedit->setText("");
     }
 
@@ -698,6 +698,6 @@ void MainWindow::on_checkBox_SendFileData_clicked(bool checked)
 
         QMessageBox::information(this, "Tips",QString::fromLocal8Bit("敬请期待"),QMessageBox::Yes);
         ui->checkBox_SendFileData->setChecked(false);
-   }
+    }
 
 }

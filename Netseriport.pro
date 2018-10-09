@@ -40,6 +40,8 @@ HEADERS += \
 FORMS += \
         mainwindow.ui
 
+RC_ICONS = jpg.ico
+
 DISTFILES += \
     image.rc \
     jpg.ico
